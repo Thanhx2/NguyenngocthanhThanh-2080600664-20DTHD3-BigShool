@@ -1,4 +1,5 @@
-﻿using NguyenngocthanhThanh_2080600664_20DTHD3.Models;
+﻿using Microsoft.AspNet.Identity;
+using NguyenngocthanhThanh_2080600664_20DTHD3.Models;
 using NguyenngocthanhThanh_2080600664_20DTHD3.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,8 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace NguyenngocthanhThanh_2080600664_20DTHD3.Controllers
+
+
 {
     public class CoursesController : Controller
     {
@@ -17,6 +20,7 @@ namespace NguyenngocthanhThanh_2080600664_20DTHD3.Controllers
         }
 
         // GET: Courses
+        [Authorize]
         public ActionResult Create()
         {
             var viewModel = new CourseViewModel
@@ -24,6 +28,30 @@ namespace NguyenngocthanhThanh_2080600664_20DTHD3.Controllers
                 Categories = _dbContext.Categories.ToList()
             };
             return View(viewModel);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(CourseViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                viewModel.Categories = _dbContext.Categories.ToList();
+                return View("Create", viewModel);
+            }
+   
+            var course = new Course()
+            {
+                LecturerId = User.Identity.GetUserId(),
+                DateTime = viewModel.GetDateTime(),
+                CategoryId = viewModel.Category,
+                Place = viewModel.Place
+            };
+           
+            _dbContext.Courses.Add(course);
+            _dbContext.SaveChanges();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
