@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
 using NguyenngocthanhThanh_2080600664_20DTHD3.Models;
+using NguyenngocthanhThanh_2080600664_20DTHD3.ViewModels;
 
 namespace NguyenngocthanhThanh_2080600664_20DTHD3.Controllers
 {
@@ -24,21 +25,14 @@ namespace NguyenngocthanhThanh_2080600664_20DTHD3.Controllers
             .Include(c => c.Lecturer)
             .Include(c => c.Category)
             .Where(c => c.DateTime > DateTime.Now);
-            return View(upcommingCourses);
-        }
 
-            public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            var viewModel = new CoursesViewModel 
+            {
+                UpcommingCourses = upcommingCourses,
+                ShowAction = User.Identity.IsAuthenticated
+            };
+      
+            return View(viewModel);
         }
     }
 }

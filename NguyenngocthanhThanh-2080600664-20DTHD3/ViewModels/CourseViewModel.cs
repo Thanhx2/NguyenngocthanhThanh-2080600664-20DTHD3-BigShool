@@ -26,5 +26,6 @@ namespace NguyenngocthanhThanh_2080600664_20DTHD3.ViewModels
         {
             return DateTime.Parse(string.Format("{0} {1}", Date, Time));
         }
+        
     }
 }
